@@ -96,16 +96,9 @@ class Create_new_project(wx.Panel):
         hbox2.Add(self.sel_wd,0, wx.ALL, -1)
         self.boxsizer.Add(hbox2)
 
-        self.copy_choice = wx.CheckBox(self, label="Do you want to copy the videos?")
-        self.copy_choice.Bind(wx.EVT_CHECKBOX,self.activate_copy_videos)
+        self.copy_choice = wx.RadioBox(self, label='Do you want to copy the videos?', choices=['No', 'Yes'], majorDimension=1, style=wx.RA_SPECIFY_ROWS)
+        self.copy_choice.Bind(wx.EVT_RADIOBOX, self.choose_copy_option)
         hbox3.Add(self.copy_choice)
-        hbox3.AddSpacer(155)
-        self.yes = wx.RadioButton( self, -1, "No", style = wx.RB_GROUP)
-        self.no = wx.RadioButton( self, -1, "Yes")
-        self.yes.Enable(False)
-        self.no.Enable(False)
-        hbox3.Add(self.yes, 0, wx.ALL, -1)
-        hbox3.Add(self.no, 0, wx.ALL, -1)
         self.boxsizer.Add(hbox3)
         self.sizer.Add(self.boxsizer, pos=(7, 0), span=(1, 7),flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT , border=10)
 
@@ -219,17 +212,12 @@ class Create_new_project(wx.Panel):
             self.filelist = self.filelist + self.vids
             self.sel_vids.SetLabel("Total %s Videos selected" %len(self.filelist))
 
-    def activate_copy_videos(self,event):
+    def choose_copy_option(self, event):
         """
-        Activates the option to copy videos
+        Apply the option to copy videos
         """
-        self.change_copy = event.GetEventObject()
-        if self.change_copy.GetValue() == True:
-            self.yes.Enable(False)
-            self.no.Enable(True)
-        else:
-            self.yes.Enable(False)
-            self.no.Enable(False)
+        choice = self.copy_choice.GetStringSelection()
+        self.copy = (choice == "Yes")
 
     def activate_change_wd(self,event):
         """
@@ -240,10 +228,6 @@ class Create_new_project(wx.Panel):
             self.sel_wd.Enable(True)
         else:
             self.sel_wd.Enable(False)
-
-    def select_copy_videos(self, event):
-        btn = event.GetEventObject()
-        self.copy = btn.GetLabel()
 
     def select_working_dir(self,event):
         cwd = os.getcwd()
